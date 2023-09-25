@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, vec};
 
 pub fn day_1() {
     let raw_input = fs::read_to_string("src/aoc_2015/day1_input").unwrap();
@@ -15,6 +15,7 @@ pub fn day_1() {
     println!("Final floor is {}", start_floor);
 }
 
+#[derive(Debug)]
 struct Dimension {
     length: i32,
     width: i32,
@@ -23,18 +24,40 @@ struct Dimension {
 
 pub fn day_2() {
     let raw_input = fs::read_to_string("src/aoc_2015/day2_input").unwrap();
-    let input_vec = raw_input.split("\n");
-    let rows = input_vec.for_each(|s| {
-        // S is l,w,h
-        // Formula for the wrapping is 2*l*w + 2*w*h + 2*h*l
-        // Split more
-        let h_w_l: Vec<Option<i32>> = s.split("x").map(|s| s.parse::<i32>().ok()).collect();
-        println!("Vec {:?}", h_w_l);
 
-        if (h_w_l.len() == 3) {
-            let height = h_w_l.get(0);
-            let width = h_w_l.get(1);
-            let length = h_w_l.get(2);
-        }
-    });
+    let dimensions: Vec<Dimension> = raw_input
+        .lines()
+        .filter_map(|line| {
+            // Length, width, height
+            let parts: Vec<i32> = line.split("x").filter_map(|p| p.parse().ok()).collect();
+            if parts.len() == 3 {
+                Some(Dimension {
+                    length: parts[0],
+                    width: parts[1],
+                    height: parts[2],
+                })
+            } else {
+                // noop
+                None
+            }
+        })
+        .collect();
+
+    let total_area: i32 = dimensions
+        .iter()
+        .map(|d| {
+            let s_1 = d.length * d.width;
+            let s_2 = d.width * d.height;
+            let s_3 = d.height * d.length;
+
+            let total = 2 * (s_1 + s_2 + s_3);
+            let smallest_side = std::cmp::min(s_1, std::cmp::min(s_2, s_3));
+            let answer = total + smallest_side;
+            println!("Answer is {:?}", answer);
+            println!("Question is {:?}", d);
+            println!("Dim is {} {} {}", s_1, s_2, s_3);
+            answer
+        })
+        .sum();
+    println!("{:?}", total_area);
 }
