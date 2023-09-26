@@ -2,17 +2,25 @@ use std::{fs, vec};
 
 pub fn day_1() {
     let raw_input = fs::read_to_string("src/aoc_2015/day1_input").unwrap();
-    let mut start_floor = 0;
+    let mut start_floor: i32 = 0;
+    let mut negative_floor = None;
+
     let input_vec = raw_input.split("");
-    input_vec.for_each(|s| {
+    input_vec.enumerate().for_each(|(i, s)| {
         if s == "(" {
             start_floor += 1;
         } else if s == ")" {
             start_floor -= 1;
         };
+
+
+        if start_floor == -1 && negative_floor.is_none() {
+            negative_floor = Some(i);
+        }
     });
 
     println!("Final floor is {}", start_floor);
+    println!("Negative floor is {}", negative_floor.unwrap());
 }
 
 #[derive(Debug)]
@@ -60,4 +68,8 @@ pub fn day_2() {
         })
         .sum();
     println!("{:?}", total_area);
+}
+
+pub fn run_2015() {
+    day_1();
 }
