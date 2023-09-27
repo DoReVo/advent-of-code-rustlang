@@ -89,12 +89,32 @@ pub fn day_2() {
 pub fn day_3() {
     let raw_input = fs::read_to_string("src/aoc_2015/day3_input").unwrap();
 
+    #[derive(Debug)]
     enum Direction {
         North,
         East,
         South,
-        West
-    };
+        West,
+    }
+
+    let houses_visited: Vec<Vec<Option<i32>>> = vec![vec![Some(1)]];
+
+    let moves: Vec<Direction> = raw_input
+        .split("")
+        .filter_map(|m| match m {
+            "^" => Some(Direction::North),
+            "<" => Some(Direction::West),
+            "v" => Some(Direction::South),
+            ">" => Some(Direction::East),
+            other => {
+                println!("Found unknown character {:?}", other);
+                None
+            }
+        })
+        .collect();
+
+    moves.iter().for_each(|m| {});
+    // println!("list of moves {:?}",moves);
 }
 pub fn run_2015() {
     day_3();
