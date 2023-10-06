@@ -1,4 +1,4 @@
-use std::{fs, vec};
+use std::{collections::HashMap, fs, vec};
 
 pub fn day_1() {
     let raw_input = fs::read_to_string("src/aoc_2015/day1_input").unwrap();
@@ -97,8 +97,13 @@ pub fn day_3() {
         West,
     }
 
-    let houses_visited: Vec<Vec<Option<i32>>> = vec![vec![Some(1)]];
-    let mut location: [i32; 2] = [0, 0];
+    #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
+    struct Location {
+        x: i32,
+        y: i32,
+    }
+
+    let mut location: Location = Location { x: 0, y: 0 };
 
     let moves: Vec<Direction> = raw_input
         .split("")
@@ -114,30 +119,37 @@ pub fn day_3() {
         })
         .collect();
 
-    println!("{:?}", houses_visited);
+    let mut house_visited: HashMap<Location, i32> = HashMap::new();
+
+    house_visited.insert(location, 1);
 
     moves.iter().for_each(|m| {
-        println!("Moving to {:?}, current location is {:?}", m, location);
+        // println!("Moving to {:?}, current location is {:?}", m, location);
 
         match m {
             Direction::North => {
-                location[1] = location[1] + 1;
+                location.y = location.y + 1;
             }
             Direction::East => {
-                location[0] = location[0] + 1;
+                location.x = location.x + 1;
             }
             Direction::South => {
-                location[1] = location[1] - 1;
+                location.y = location.y - 1;
             }
             Direction::West => {
-                location[0] = location[0] - 1;
+                location.x = location.x - 1;
             }
         }
 
-        // Access the house at location
-        println!("Moved to {:?}",  location);
+        *house_visited.entry(location).or_insert(1) += 1;
     });
-    // println!("list of moves {:?}",moves);
+    // house visited at least once
+    let total_visited_at_least_once = house_visited.values().filter(|&&v| v >= 1).count();
+
+    println!(
+        "House visited at least once: {:?}",
+        total_visited_at_least_once
+    );
 }
 pub fn run_2015() {
     day_3();
