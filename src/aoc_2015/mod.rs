@@ -98,6 +98,7 @@ pub fn day_3() {
     }
 
     let houses_visited: Vec<Vec<Option<i32>>> = vec![vec![Some(1)]];
+    let mut location: [i32; 2] = [0, 0];
 
     let moves: Vec<Direction> = raw_input
         .split("")
@@ -113,7 +114,29 @@ pub fn day_3() {
         })
         .collect();
 
-    moves.iter().for_each(|m| {});
+    println!("{:?}", houses_visited);
+
+    moves.iter().for_each(|m| {
+        println!("Moving to {:?}, current location is {:?}", m, location);
+
+        match m {
+            Direction::North => {
+                location[1] = location[1] + 1;
+            }
+            Direction::East => {
+                location[0] = location[0] + 1;
+            }
+            Direction::South => {
+                location[1] = location[1] - 1;
+            }
+            Direction::West => {
+                location[0] = location[0] - 1;
+            }
+        }
+
+        // Access the house at location
+        println!("Moved to {:?}",  location);
+    });
     // println!("list of moves {:?}",moves);
 }
 pub fn run_2015() {
